@@ -18,7 +18,7 @@
     */
 
     const STORAGE_KEY = "simCompaniesTheme";
-    const AVAILABLE_THEMES = ["japan", "vietnam"];
+    const AVAILABLE_THEMES = ["japan", "test", "vietnam"];
     let selectedTheme = null;
     let menuOpen = false;
 
