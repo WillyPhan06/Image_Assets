@@ -176,7 +176,7 @@
         "sales_offices_tier06": {
 
             image:
-            "sales_office_level_15_v4.png",
+            "sales_office_level_15_v5.png",
 
             land:
             DEFAULT_LAND_URL
@@ -224,7 +224,7 @@
 
         "aerospace_factory_tier04": {
             image:
-            "aerospace_factory_level_15_v2.png",
+            "aerospace_factory_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -232,7 +232,7 @@
 
         "aerospace_factory_tier06": {
             image:
-            "aerospace_factory_level_15_v2.png",
+            "aerospace_factory_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -416,7 +416,7 @@
 
         "sc_background_main_dark_2k_v2": {
             image:
-            "main_background_v7.jpg",
+            "main_background_v8.jpg",
 
             land:
             DEFAULT_LAND_URL
