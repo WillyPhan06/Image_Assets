@@ -29,18 +29,19 @@
     */
 
     function initializeTheme() {
-        // If theme already stored (manually selected), use it
-        if (selectedTheme) {
-            console.log("[Sim Skin Loader] Using stored theme:", selectedTheme);
+        // Check if user manually selected a theme (from menu click)
+        const stored = localStorage.getItem(STORAGE_KEY);
+        
+        if (stored) {
+            selectedTheme = stored;
+            localStorage.removeItem(STORAGE_KEY); // Clear after using
+            console.log("[Sim Skin Loader] Using manually selected theme:", selectedTheme);
             return;
         }
 
         // Otherwise, randomly select a theme
         selectedTheme = AVAILABLE_THEMES[Math.floor(Math.random() * AVAILABLE_THEMES.length)];
         console.log("[Sim Skin Loader] Randomly selected theme:", selectedTheme);
-
-        // Store the selection
-        localStorage.setItem(STORAGE_KEY, selectedTheme);
     }
 
     /*
