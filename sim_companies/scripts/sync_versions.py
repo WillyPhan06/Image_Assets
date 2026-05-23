@@ -30,12 +30,14 @@ def get_theme_directories():
     return themes
 
 
-def parse_filename(filename):
+def parse_filename(filename, known_themes=None):
     """
     Parse filename to extract building name and version.
+    Dynamically removes any theme suffix from the filename.
     Examples:
     - sales_office_level_15_japan_v4.png -> ('sales_office_level_15', 4, '.png')
     - exchange_japan.png -> ('exchange', None, '.png')
+    - aerospace_electronics_level_15_galaxy_v3.png -> ('aerospace_electronics_level_15', 3, '.png')
     """
     ext = Path(filename).suffix  # .png or .jpg
     name_without_ext = filename.replace(ext, "")
@@ -49,14 +51,21 @@ def parse_filename(filename):
         version = None
         name_without_version = name_without_ext
     
-    # Now remove theme suffix (japan/vietnam) from the remaining name
-    name_without_theme = re.sub(r'_(japan|vietnam)$', '', name_without_version)
+    # Remove theme suffix dynamically from the remaining name
+    if known_themes:
+        # Build regex pattern from all known themes
+        themes_pattern = '|'.join(sorted(known_themes, key=len, reverse=True))
+        name_without_theme = re.sub(f'_({themes_pattern})$', '', name_without_version)
+    else:
+        # Fallback to hardcoded if no themes provided (shouldn't happen)
+        name_without_theme = re.sub(r'_(japan|vietnam|galaxy)$', '', name_without_version)
+    
     base_name = name_without_theme
     
     return base_name, version, ext
 
 
-def get_files_by_theme(theme_dir):
+def get_files_by_theme(theme_dir, known_themes=None):
     """Get all image files organized by building name."""
     files_dict = defaultdict(lambda: {'files': [], 'versions': []})
     
@@ -66,7 +75,7 @@ def get_files_by_theme(theme_dir):
     
     for filename in sorted(os.listdir(theme_dir)):
         if filename.endswith(('.png', '.jpg')):
-            base_name, version, ext = parse_filename(filename)
+            base_name, version, ext = parse_filename(filename, known_themes)
             files_dict[base_name]['files'].append(filename)
             if version is not None:
                 files_dict[base_name]['versions'].append(version)
@@ -121,10 +130,10 @@ def sync_versions():
     # Update the AVAILABLE_THEMES in the script with discovered themes
     update_available_themes(themes.keys())
     
-    # Get files from all themes
+    # Get files from all themes (pass known themes so parse_filename can remove them)
     all_themes_dicts = {}
     for theme_name, theme_path in themes.items():
-        all_themes_dicts[theme_name] = get_files_by_theme(theme_path)
+        all_themes_dicts[theme_name] = get_files_by_theme(theme_path, themes.keys())
     
     # Collect all unique building names
     all_buildings = set()
@@ -152,7 +161,7 @@ def sync_versions():
             
             if building_name in theme_dict:
                 for filename in theme_dict[building_name]['files']:
-                    base, ver, ext = parse_filename(filename)
+                    base, ver, ext = parse_filename(filename, themes.keys())
                     if ver != max_version:
                         old_file = theme_path / filename
                         new_filename = f"{base}_{theme_name}_v{max_version}{ext}"
@@ -219,24 +228,27 @@ def update_available_themes(theme_names):
         return
     
     with open(SCRIPT_FILE, 'r', encoding='utf-8') as f:
-        content = f.read()
+        lines = f.readlines()
     
-    original_content = content
-    
-    # Create the new AVAILABLE_THEMES array
     themes_list = ', '.join([f'"{theme}"' for theme in sorted(theme_names)])
     new_themes_line = f'const AVAILABLE_THEMES = [{themes_list}];'
     
     # Find and replace the AVAILABLE_THEMES line
-    pattern = r'const AVAILABLE_THEMES = \[.*?\];'
-    content = re.sub(pattern, new_themes_line, content, flags=re.DOTALL)
+    updated = False
+    for i, line in enumerate(lines):
+        if 'const AVAILABLE_THEMES' in line and '=' in line:
+            # Preserve the indentation
+            indent = len(line) - len(line.lstrip())
+            lines[i] = ' ' * indent + new_themes_line + '\n'
+            updated = True
+            break
     
-    if content != original_content:
+    if updated:
         with open(SCRIPT_FILE, 'w', encoding='utf-8') as f:
-            f.write(content)
+            f.writelines(lines)
         print(f"✅ Updated AVAILABLE_THEMES: {themes_list}")
     else:
-        print(f"ℹ️  AVAILABLE_THEMES already up to date")
+        print(f"⚠️  Could not find AVAILABLE_THEMES line in script")
 
 
 if __name__ == "__main__":
