@@ -145,9 +145,9 @@
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
 
-            // Close on ESC key
+            // Close on ESC and M key
             const escHandler = (e) => {
-                if (e.key === "Escape") {
+                if (e.key === "Escape" || e.key === "m") {
                     overlay.remove();
                     document.removeEventListener("keydown", escHandler);
                     resolve(null);
