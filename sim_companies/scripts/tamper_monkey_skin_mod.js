@@ -418,7 +418,7 @@
 
         "sc_background_main_dark_2k_v2": {
             image:
-            "main_background_v6.jpg",
+            "main_background_v7.jpg",
 
             land:
             DEFAULT_LAND_URL
