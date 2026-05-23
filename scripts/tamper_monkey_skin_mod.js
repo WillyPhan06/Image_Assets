@@ -199,6 +199,14 @@
             DEFAULT_LAND_URL
         },
 
+        "academy_tier05": {
+            image:
+            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/academy_level_20_japan.png",
+
+            land:
+            DEFAULT_LAND_URL
+        },
+
         "exchange_tier10": {
             image:
             "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/exchange_japan.png",
