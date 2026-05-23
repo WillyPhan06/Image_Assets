@@ -156,8 +156,11 @@ def process_manual_folders(theme_name):
         for img_path in sorted(images):
             ext = img_path.suffix
             
-            # Create new filename: {building}_{theme}_{version}.{ext}
-            new_filename = f"{building_name}_{theme_name}_v{version}{ext}"
+            # Create new filename: {building}_{theme}.{ext} (or with _v# if version > 1)
+            if version > 1:
+                new_filename = f"{building_name}_{theme_name}_v{version}{ext}"
+            else:
+                new_filename = f"{building_name}_{theme_name}{ext}"
             new_path = theme_dir / new_filename
             
             try:
