@@ -101,11 +101,9 @@
                 btn.onclick = () => {
                     localStorage.setItem(STORAGE_KEY, theme);
                     selectedTheme = theme;
-                    overlay.remove();
                     console.log("[Sim Skin Loader] Theme changed to:", theme);
-                    clearReplacementMarkers();
-                    replaceBuildings();
-                    resolve(theme);
+                    console.log("[Sim Skin Loader] Reloading page...");
+                    location.reload();
                 };
 
                 buttonContainer.appendChild(btn);
