@@ -202,7 +202,7 @@
         "sales_offices_tier06": {
 
             image:
-            "sales_office_level.png",
+            "sales_office_level_15_v5.png",
 
             land:
             DEFAULT_LAND_URL
@@ -210,7 +210,7 @@
 
         "refinery_tier06": {
             image:
-            "refinery_level.png",
+            "refinery_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -218,7 +218,7 @@
 
         "factory_tier06": {
             image:
-            "factory_level.png",
+            "factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -226,7 +226,7 @@
 
         "factory_tier05": {
             image:
-            "factory_level.png",
+            "factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -234,7 +234,7 @@
 
         "propulsion_factory_tier04": {
             image:
-            "propulsion_factory_level.png",
+            "propulsion_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -242,7 +242,7 @@
 
         "propulsion_factory_tier06": {
             image:
-            "propulsion_factory_level.png",
+            "propulsion_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -250,7 +250,7 @@
 
         "aerospace_factory_tier04": {
             image:
-            "aerospace_factory_level.png",
+            "aerospace_factory_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -258,7 +258,7 @@
 
         "aerospace_factory_tier06": {
             image:
-            "aerospace_factory_level.png",
+            "aerospace_factory_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -266,7 +266,7 @@
 
         "hangar_tier04": {
             image:
-            "hangar_level.png",
+            "hangar_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -274,7 +274,7 @@
 
         "hangar_tier06": {
             image:
-            "hangar_level.png",
+            "hangar_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -282,7 +282,7 @@
 
         "vertical_integration_facility_tier03": {
             image:
-            "vertical_integration_facility_level.png",
+            "vertical_integration_facility_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -290,7 +290,7 @@
 
         "vertical_integration_facility_tier06": {
             image:
-            "vertical_integration_facility_level.png",
+            "vertical_integration_facility_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -298,7 +298,7 @@
 
         "electronics_factory_tier04": {
             image:
-            "electronic_factory_level.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -306,7 +306,7 @@
 
         "electronics_factory_tier05": {
             image:
-            "electronic_factory_level.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -314,7 +314,7 @@
 
         "electronics_factory_tier06": {
             image:
-            "electronic_factory_level.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -322,7 +322,7 @@
 
         "aerospace_electronics_tier05": {
             image:
-            "aerospace_electronics_level.png",
+            "aerospace_electronics_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -330,7 +330,7 @@
 
         "aerospace_electronics_tier06": {
             image:
-            "aerospace_electronics_level.png",
+            "aerospace_electronics_level_15_v3.png",
 
             land:
             DEFAULT_LAND_URL
@@ -338,7 +338,7 @@
 
         "carfactory-lvl1": {
             image:
-            "car_factory_level.png",
+            "car_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -346,7 +346,7 @@
 
         "carfactory-lvl2": {
             image:
-            "car_factory_level.png",
+            "car_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -354,7 +354,7 @@
 
         "academy_tier03": {
             image:
-            "academy_level.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -362,7 +362,7 @@
 
         "academy_tier04": {
             image:
-            "academy_level.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -370,7 +370,7 @@
 
         "academy_tier05": {
             image:
-            "academy_level.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -426,7 +426,7 @@
 
         "oil_rig_tier05": {
             image:
-            "oil_rig_level.png",
+            "oil_rig_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -434,7 +434,7 @@
 
         "oil_rig_tier06": {
             image:
-            "oil_rig_level.png",
+            "oil_rig_level_15.png",
 
             land:
             DEFAULT_LAND_URL
