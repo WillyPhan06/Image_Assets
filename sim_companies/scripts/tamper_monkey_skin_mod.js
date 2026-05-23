@@ -19,7 +19,7 @@
 
     const STORAGE_KEY = "simCompaniesTheme";
     const AVAILABLE_THEMES = ["japan", "vietnam"];
-    let selectedTheme = localStorage.getItem(STORAGE_KEY) || null;
+    let selectedTheme = null;
 
     /*
     ============================================================
