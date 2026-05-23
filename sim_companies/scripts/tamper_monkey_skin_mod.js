@@ -13,19 +13,124 @@
 
     /*
     ============================================================
+    THEME SELECTION
+    ============================================================
+    */
+
+    const STORAGE_KEY = "simCompaniesTheme";
+    const AVAILABLE_THEMES = ["japan", "vietnam"];
+    let selectedTheme = localStorage.getItem(STORAGE_KEY) || null;
+
+    /*
+    ============================================================
+    THEME SELECTOR UI
+    ============================================================
+    */
+
+    function showThemeSelector() {
+        return new Promise((resolve) => {
+            const overlay = document.createElement("div");
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999999;
+                font-family: Arial, sans-serif;
+            `;
+
+            const modal = document.createElement("div");
+            modal.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            `;
+
+            const title = document.createElement("h2");
+            title.textContent = "Select Theme";
+            title.style.marginBottom = "20px";
+            modal.appendChild(title);
+
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.gap = "10px";
+            buttonContainer.style.justifyContent = "center";
+
+            AVAILABLE_THEMES.forEach((theme) => {
+                const btn = document.createElement("button");
+                btn.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+                btn.style.cssText = `
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    border: none;
+                    border-radius: 5px;
+                    background: #007bff;
+                    color: white;
+                    transition: background 0.3s;
+                `;
+
+                btn.onmouseover = () => (btn.style.background = "#0056b3");
+                btn.onmouseout = () => (btn.style.background = "#007bff");
+
+                btn.onclick = () => {
+                    localStorage.setItem(STORAGE_KEY, theme);
+                    selectedTheme = theme;
+                    overlay.remove();
+                    console.log("[Sim Skin Loader] Theme selected:", theme);
+                    resolve(theme);
+                };
+
+                buttonContainer.appendChild(btn);
+            });
+
+            modal.appendChild(buttonContainer);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+        });
+    }
+
+    /*
+    ============================================================
     CONFIG
     ============================================================
 
     FORMAT:
 
     "ORIGINAL_KEYWORD": {
-        image: "CUSTOM_IMAGE_URL",
+        image: "BASE_IMAGE_NAME",
         land:  "LAND_TILE_URL"
     }
 
     ============================================================
     */
     const DEFAULT_LAND_URL = "/static/images/buildings/tiles/concrete-0000.f92fedbaba84.png"
+    const CDN_BASE_URL = "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/themes";
+
+    /*
+    ============================================================
+    BUILD IMAGE URL DYNAMICALLY
+    ============================================================
+    */
+
+    function buildImageUrl(baseImageName, theme) {
+        const ext = baseImageName.includes(".jpg") ? ".jpg" : ".png";
+        const nameWithoutExt = baseImageName.replace(/\.(png|jpg)$/, "");
+
+        // Extract version part if it exists (e.g., "_v4")
+        const versionMatch = nameWithoutExt.match(/(_v\d+)$/);
+        const version = versionMatch ? versionMatch[1] : "";
+        const baseName = nameWithoutExt.replace(/(_v\d+)$/, "");
+
+        return `${CDN_BASE_URL}/${theme}/${baseName}_${theme}${version}${ext}`;
+    }
 
     const REPLACEMENTS = {
 
@@ -33,7 +138,7 @@
         "sales_offices_tier06": {
 
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/sales_office_level_15_japan_v4.png",
+            "sales_office_level_15_v4.png",
 
             land:
             DEFAULT_LAND_URL
@@ -41,7 +146,7 @@
 
         "refinery_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/refinery_level_15_japan_v2.png",
+            "refinery_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -49,7 +154,7 @@
 
         "factory_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/factory_level_15_japan.png",
+            "factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -57,7 +162,7 @@
 
         "factory_tier05": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/factory_level_15_japan.png",
+            "factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -65,7 +170,7 @@
 
         "propulsion_factory_tier04": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/propulsion_factory_level_15_japan.png",
+            "propulsion_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -73,7 +178,7 @@
 
         "propulsion_factory_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/propulsion_factory_level_15_japan.png",
+            "propulsion_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -81,7 +186,7 @@
 
         "aerospace_factory_tier04": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/aerospace_factory_level_15_japan_v2.png",
+            "aerospace_factory_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -89,7 +194,7 @@
 
         "aerospace_factory_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/aerospace_factory_level_15_japan_v2.png",
+            "aerospace_factory_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -97,7 +202,7 @@
 
         "hangar_tier04": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/hangar_level_15_japan.png",
+            "hangar_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -105,7 +210,7 @@
 
         "hangar_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/hangar_level_15_japan.png",
+            "hangar_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -113,7 +218,7 @@
 
         "vertical_integration_facility_tier03": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/vertical_integration_facility_level_15_japan_v2.png",
+            "vertical_integration_facility_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -121,7 +226,7 @@
 
         "vertical_integration_facility_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/vertical_integration_facility_level_15_japan_v2.png",
+            "vertical_integration_facility_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -129,7 +234,7 @@
 
         "electronics_factory_tier04": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/electronic_factory_level_15_japan.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -137,7 +242,7 @@
 
         "electronics_factory_tier05": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/electronic_factory_level_15_japan.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -145,7 +250,7 @@
 
         "electronics_factory_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/electronic_factory_level_15_japan.png",
+            "electronic_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -153,7 +258,7 @@
 
         "aerospace_electronics_tier05": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/aerospace_electronics_level_15_japan_v2.png",
+            "aerospace_electronics_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -161,7 +266,7 @@
 
         "aerospace_electronics_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/aerospace_electronics_level_15_japan_v2.png",
+            "aerospace_electronics_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -169,7 +274,7 @@
 
         "carfactory-lvl1": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/car_factory_level_15_japan.png",
+            "car_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -177,7 +282,7 @@
 
         "carfactory-lvl2": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/car_factory_level_15_japan.png",
+            "car_factory_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -185,7 +290,7 @@
 
         "academy_tier03": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/academy_level_20_japan.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -193,7 +298,7 @@
 
         "academy_tier04": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/academy_level_20_japan.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -201,7 +306,7 @@
 
         "academy_tier05": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/academy_level_20_japan.png",
+            "academy_level_20.png",
 
             land:
             DEFAULT_LAND_URL
@@ -209,7 +314,7 @@
 
         "exchange_tier10": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/exchange_japan.png",
+            "exchange.png",
 
             land:
             DEFAULT_LAND_URL
@@ -217,7 +322,7 @@
 
         "hq-uk-bell-tower": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/uk_hq_bell_tower_japan.png",
+            "uk_hq_bell_tower.png",
 
             land:
             DEFAULT_LAND_URL
@@ -225,7 +330,7 @@
 
         "town_square_01": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/town_square_japan.png",
+            "town_square.png",
 
             land:
             DEFAULT_LAND_URL
@@ -233,7 +338,7 @@
 
         "forrest_02": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/forest_japan.png",
+            "forest.png",
 
             land:
             DEFAULT_LAND_URL
@@ -241,7 +346,7 @@
 
         "residential_02": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/forest_japan.png",
+            "forest.png",
 
             land:
             DEFAULT_LAND_URL
@@ -249,7 +354,7 @@
 
         "lake_tier03": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/lake_japan.png",
+            "lake.png",
 
             land:
             DEFAULT_LAND_URL
@@ -257,7 +362,7 @@
 
         "oil_rig_tier05": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/oil_rig_level_15_japan.png",
+            "oil_rig_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -265,7 +370,7 @@
 
         "oil_rig_tier06": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/oil_rig_level_15_japan.png",
+            "oil_rig_level_15.png",
 
             land:
             DEFAULT_LAND_URL
@@ -273,7 +378,7 @@
 
         "sc_background_main_dark_2k_v2": {
             image:
-            "https://cdn.jsdelivr.net/gh/WillyPhan06/Image_Assets@main/sim_companies/main_background_japan_v6.jpg",
+            "main_background_v6.jpg",
 
             land:
             DEFAULT_LAND_URL
@@ -315,6 +420,7 @@
             );
 
             const replacement = REPLACEMENTS[matchedKey];
+            const imageUrl = buildImageUrl(replacement.image, selectedTheme);
 
             /*
             ============================================================
@@ -335,7 +441,7 @@
                   matchedKey === "sc_background_main_dark_2k_v2";
 
             if (isMainBackground) {
-                div.style.backgroundImage = `url(${replacement.image})`;
+                div.style.backgroundImage = `url(${imageUrl})`;
 
                 div.style.backgroundSize = "cover";
                 div.style.backgroundPosition = "center";
@@ -343,7 +449,7 @@
 
             } else {
                 div.style.backgroundImage =
-                    `url(${replacement.image}), url(${replacement.land})`;
+                    `url(${imageUrl}), url(${replacement.land})`;
 
                 div.style.backgroundSize =
                     `${width} ${height}, ${width} ${height}`;
@@ -383,8 +489,9 @@
             console.log("[Sim Skin Loader] Replacing IMG:", matchedKey);
 
             const replacement = REPLACEMENTS[matchedKey];
+            const imageUrl = buildImageUrl(replacement.image, selectedTheme);
 
-            img.src = replacement.image;
+            img.src = imageUrl;
 
             img.dataset.skinReplaced = "true";
 });
@@ -415,7 +522,15 @@
 
         console.log("[Sim Skin Loader] Loaded");
 
-        replaceBuildings();
+        async function initialize() {
+            // Show theme selector if no theme is stored
+            if (!selectedTheme) {
+                await showThemeSelector();
+            }
+            replaceBuildings();
+        }
+
+        initialize();
     });
 
 })();
