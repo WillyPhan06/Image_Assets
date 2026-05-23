@@ -118,6 +118,9 @@ def sync_versions():
     
     print(f"\nDiscovered themes: {', '.join(themes.keys())}")
     
+    # Update the AVAILABLE_THEMES in the script with discovered themes
+    update_available_themes(themes.keys())
+    
     # Get files from all themes
     all_themes_dicts = {}
     for theme_name, theme_path in themes.items():
@@ -207,6 +210,33 @@ def update_script(updates_dict):
         print(f"\n✅ Script file updated: {SCRIPT_FILE.name}")
     else:
         print(f"\nℹ️  No updates needed in script file")
+
+
+def update_available_themes(theme_names):
+    """Update the AVAILABLE_THEMES array in tamper_monkey_skin_mod.js."""
+    if not SCRIPT_FILE.exists():
+        print(f"Warning: Script file not found: {SCRIPT_FILE}")
+        return
+    
+    with open(SCRIPT_FILE, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    original_content = content
+    
+    # Create the new AVAILABLE_THEMES array
+    themes_list = ', '.join([f'"{theme}"' for theme in sorted(theme_names)])
+    new_themes_line = f'const AVAILABLE_THEMES = [{themes_list}];'
+    
+    # Find and replace the AVAILABLE_THEMES line
+    pattern = r'const AVAILABLE_THEMES = \[.*?\];'
+    content = re.sub(pattern, new_themes_line, content, flags=re.DOTALL)
+    
+    if content != original_content:
+        with open(SCRIPT_FILE, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print(f"✅ Updated AVAILABLE_THEMES: {themes_list}")
+    else:
+        print(f"ℹ️  AVAILABLE_THEMES already up to date")
 
 
 if __name__ == "__main__":

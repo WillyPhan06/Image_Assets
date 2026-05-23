@@ -18,59 +18,24 @@
     */
 
     const STORAGE_KEY = "simCompaniesTheme";
+    const AVAILABLE_THEMES = ["japan", "vietnam"];
     let selectedTheme = localStorage.getItem(STORAGE_KEY) || null;
 
     /*
     ============================================================
-    DISCOVER AVAILABLE THEMES
+    INITIALIZE THEME
     ============================================================
     */
 
-    async function discoverAvailableThemes() {
-        try {
-            // Fetch GitHub API to list contents of sim_companies/themes directory
-            const response = await fetch(
-                'https://api.github.com/repos/WillyPhan06/Image_Assets/contents/sim_companies/themes'
-            );
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            // Filter for directories only, excluding hidden folders
-            const themes = data
-                .filter(item => item.type === 'dir' && !item.name.startsWith('.'))
-                .map(item => item.name)
-                .sort();
-
-            console.log("[Sim Skin Loader] Discovered themes:", themes);
-            return themes.length > 0 ? themes : null;
-        } catch (error) {
-            console.log("[Sim Skin Loader] Could not discover themes from GitHub:", error.message);
-            return null;
-        }
-    }
-
-    async function initializeTheme() {
+    function initializeTheme() {
         // If theme already stored (manually selected), use it
         if (selectedTheme) {
             console.log("[Sim Skin Loader] Using stored theme:", selectedTheme);
             return;
         }
 
-        // Otherwise, discover and randomly select a theme
-        let themes = await discoverAvailableThemes();
-
-        if (!themes || themes.length === 0) {
-            // Fallback to default themes if discovery fails
-            themes = ["japan", "vietnam"];
-            console.log("[Sim Skin Loader] Using fallback themes:", themes);
-        }
-
-        // Randomly select a theme
-        selectedTheme = themes[Math.floor(Math.random() * themes.length)];
+        // Otherwise, randomly select a theme
+        selectedTheme = AVAILABLE_THEMES[Math.floor(Math.random() * AVAILABLE_THEMES.length)];
         console.log("[Sim Skin Loader] Randomly selected theme:", selectedTheme);
 
         // Store the selection
@@ -85,115 +50,110 @@
 
     function showThemeSelector() {
         return new Promise((resolve) => {
-            // Discover themes for the menu
-            discoverAvailableThemes().then(discoveredThemes => {
-                const themes = discoveredThemes || ["japan", "vietnam"];
+            const overlay = document.createElement("div");
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 999999;
+                font-family: Arial, sans-serif;
+            `;
 
-                const overlay = document.createElement("div");
-                overlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.7);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 999999;
-                    font-family: Arial, sans-serif;
+            const modal = document.createElement("div");
+            modal.style.cssText = `
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            `;
+
+            const title = document.createElement("h2");
+            title.textContent = "Sim Companies Theme";
+            title.style.marginBottom = "20px";
+            title.style.marginTop = "0";
+            modal.appendChild(title);
+
+            const buttonContainer = document.createElement("div");
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.gap = "15px";
+            buttonContainer.style.justifyContent = "center";
+            buttonContainer.style.flexWrap = "wrap";
+
+            // Theme icons mapping
+            const themeIcons = {
+                japan: "🇯🇵",
+                vietnam: "🇻🇳"
+            };
+
+            AVAILABLE_THEMES.forEach((theme) => {
+                const btn = document.createElement("button");
+                const icon = themeIcons[theme] || "🎨";
+                const label = theme.charAt(0).toUpperCase() + theme.slice(1);
+                btn.innerHTML = `${icon}<br>${label}`;
+                btn.style.cssText = `
+                    padding: 15px 20px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    border: 2px solid #007bff;
+                    border-radius: 8px;
+                    background: ${selectedTheme === theme ? "#007bff" : "white"};
+                    color: ${selectedTheme === theme ? "white" : "#007bff"};
+                    transition: all 0.3s;
+                    min-width: 100px;
+                    font-weight: bold;
                 `;
 
-                const modal = document.createElement("div");
-                modal.style.cssText = `
-                    background: white;
-                    padding: 30px;
-                    border-radius: 10px;
-                    text-align: center;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-                `;
-
-                const title = document.createElement("h2");
-                title.textContent = "Sim Companies Theme";
-                title.style.marginBottom = "20px";
-                title.style.marginTop = "0";
-                modal.appendChild(title);
-
-                const buttonContainer = document.createElement("div");
-                buttonContainer.style.display = "flex";
-                buttonContainer.style.gap = "15px";
-                buttonContainer.style.justifyContent = "center";
-                buttonContainer.style.flexWrap = "wrap";
-
-                // Theme icons mapping
-                const themeIcons = {
-                    japan: "🇯🇵",
-                    vietnam: "🇻🇳"
+                btn.onmouseover = () => {
+                    btn.style.background = "#007bff";
+                    btn.style.color = "white";
                 };
 
-                themes.forEach((theme) => {
-                    const btn = document.createElement("button");
-                    const icon = themeIcons[theme] || "🎨";
-                    const label = theme.charAt(0).toUpperCase() + theme.slice(1);
-                    btn.innerHTML = `${icon}<br>${label}`;
-                    btn.style.cssText = `
-                        padding: 15px 20px;
-                        font-size: 14px;
-                        cursor: pointer;
-                        border: 2px solid #007bff;
-                        border-radius: 8px;
-                        background: ${selectedTheme === theme ? "#007bff" : "white"};
-                        color: ${selectedTheme === theme ? "white" : "#007bff"};
-                        transition: all 0.3s;
-                        min-width: 100px;
-                        font-weight: bold;
-                    `;
-
-                    btn.onmouseover = () => {
-                        btn.style.background = "#007bff";
-                        btn.style.color = "white";
-                    };
-
-                    btn.onmouseout = () => {
-                        btn.style.background = selectedTheme === theme ? "#007bff" : "white";
-                        btn.style.color = selectedTheme === theme ? "white" : "#007bff";
-                    };
-
-                    btn.onclick = () => {
-                        localStorage.setItem(STORAGE_KEY, theme);
-                        selectedTheme = theme;
-                        console.log("[Sim Skin Loader] Theme changed to:", theme);
-                        console.log("[Sim Skin Loader] Reloading page...");
-                        location.reload();
-                    };
-
-                    buttonContainer.appendChild(btn);
-                });
-
-                modal.appendChild(buttonContainer);
-
-                const closeHint = document.createElement("p");
-                closeHint.textContent = "Press ESC to close";
-                closeHint.style.cssText = `
-                    margin-top: 20px;
-                    font-size: 12px;
-                    color: #666;
-                `;
-                modal.appendChild(closeHint);
-
-                overlay.appendChild(modal);
-                document.body.appendChild(overlay);
-
-                // Close on ESC key
-                const escHandler = (e) => {
-                    if (e.key === "Escape") {
-                        overlay.remove();
-                        document.removeEventListener("keydown", escHandler);
-                        resolve(null);
-                    }
+                btn.onmouseout = () => {
+                    btn.style.background = selectedTheme === theme ? "#007bff" : "white";
+                    btn.style.color = selectedTheme === theme ? "white" : "#007bff";
                 };
-                document.addEventListener("keydown", escHandler);
+
+                btn.onclick = () => {
+                    localStorage.setItem(STORAGE_KEY, theme);
+                    selectedTheme = theme;
+                    console.log("[Sim Skin Loader] Theme changed to:", theme);
+                    console.log("[Sim Skin Loader] Reloading page...");
+                    location.reload();
+                };
+
+                buttonContainer.appendChild(btn);
             });
+
+            modal.appendChild(buttonContainer);
+
+            const closeHint = document.createElement("p");
+            closeHint.textContent = "Press ESC to close";
+            closeHint.style.cssText = `
+                margin-top: 20px;
+                font-size: 12px;
+                color: #666;
+            `;
+            modal.appendChild(closeHint);
+
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // Close on ESC key
+            const escHandler = (e) => {
+                if (e.key === "Escape") {
+                    overlay.remove();
+                    document.removeEventListener("keydown", escHandler);
+                    resolve(null);
+                }
+            };
+            document.addEventListener("keydown", escHandler);
         });
     }
 
@@ -651,12 +611,12 @@
     ============================================================
     */
 
-    window.addEventListener('load', async () => {
+    window.addEventListener('load', () => {
 
         console.log("[Sim Skin Loader] Initializing...");
 
-        // Initialize theme (discover and randomize if needed)
-        await initializeTheme();
+        // Initialize theme (randomize if not stored)
+        initializeTheme();
 
         console.log("[Sim Skin Loader] Loaded - Using theme:", selectedTheme);
 
