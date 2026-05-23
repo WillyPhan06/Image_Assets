@@ -424,6 +424,14 @@
             DEFAULT_LAND_URL
         },
 
+        "portrait": {
+            image:
+            "portrait.jpg",
+
+            land:
+            DEFAULT_LAND_URL
+        },
+
     };
 
     /*
