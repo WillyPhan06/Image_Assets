@@ -103,6 +103,7 @@
                     selectedTheme = theme;
                     overlay.remove();
                     console.log("[Sim Skin Loader] Theme changed to:", theme);
+                    clearReplacementMarkers();
                     replaceBuildings();
                     resolve(theme);
                 };
@@ -430,6 +431,18 @@
     REPLACEMENT LOGIC
     ============================================================
     */
+
+    function clearReplacementMarkers() {
+        const divs = document.querySelectorAll("[data-skin-replaced]");
+        divs.forEach(div => {
+            delete div.dataset.skinReplaced;
+        });
+
+        const images = document.querySelectorAll("img[data-skin-replaced]");
+        images.forEach(img => {
+            delete img.dataset.skinReplaced;
+        });
+    }
 
     function replaceBuildings() {
 
