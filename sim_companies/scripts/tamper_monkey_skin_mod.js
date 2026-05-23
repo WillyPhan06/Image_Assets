@@ -20,6 +20,7 @@
     const STORAGE_KEY = "simCompaniesTheme";
     const AVAILABLE_THEMES = ["japan", "vietnam"];
     let selectedTheme = null;
+    let menuOpen = false;
 
     /*
     ============================================================
@@ -49,6 +50,7 @@
     */
 
     function showThemeSelector() {
+        menuOpen = true;
         return new Promise((resolve) => {
             const overlay = document.createElement("div");
             overlay.style.cssText = `
@@ -134,7 +136,7 @@
             modal.appendChild(buttonContainer);
 
             const closeHint = document.createElement("p");
-            closeHint.textContent = "Press ESC to close";
+            closeHint.textContent = "Press ESC or M to close";
             closeHint.style.cssText = `
                 margin-top: 20px;
                 font-size: 12px;
@@ -147,7 +149,8 @@
 
             // Close on ESC and M key
             const escHandler = (e) => {
-                if (e.key === "Escape" || e.key === "m") {
+                if (e.key === "Escape" || e.key === "m" || e.key === "M") {
+                    menuOpen = false;
                     overlay.remove();
                     document.removeEventListener("keydown", escHandler);
                     resolve(null);
@@ -600,8 +603,10 @@
 
     document.addEventListener("keydown", (e) => {
         if ((e.key === "m" || e.key === "M") && !e.ctrlKey && !e.altKey) {
-            console.log("[Sim Skin Loader] Theme menu opened (M key)");
-            showThemeSelector();
+            if (!menuOpen) {
+                console.log("[Sim Skin Loader] Theme menu opened (M key)");
+                showThemeSelector();
+            }
         }
     });
 
