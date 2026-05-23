@@ -19,7 +19,7 @@
 
     const STORAGE_KEY = "simCompaniesTheme";
     const AVAILABLE_THEMES = ["japan", "vietnam"];
-    let selectedTheme = localStorage.getItem(STORAGE_KEY) || null;
+    let selectedTheme = localStorage.getItem(STORAGE_KEY) || "japan";
 
     /*
     ============================================================
@@ -54,37 +54,56 @@
             `;
 
             const title = document.createElement("h2");
-            title.textContent = "Select Theme";
+            title.textContent = "Sim Companies Theme";
             title.style.marginBottom = "20px";
+            title.style.marginTop = "0";
             modal.appendChild(title);
 
             const buttonContainer = document.createElement("div");
             buttonContainer.style.display = "flex";
-            buttonContainer.style.gap = "10px";
+            buttonContainer.style.gap = "15px";
             buttonContainer.style.justifyContent = "center";
+
+            // Theme icons mapping
+            const themeIcons = {
+                japan: "🇯🇵",
+                vietnam: "🇻🇳"
+            };
 
             AVAILABLE_THEMES.forEach((theme) => {
                 const btn = document.createElement("button");
-                btn.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
+                const icon = themeIcons[theme] || "🎨";
+                const label = theme.charAt(0).toUpperCase() + theme.slice(1);
+                btn.innerHTML = `${icon}<br>${label}`;
                 btn.style.cssText = `
-                    padding: 10px 20px;
-                    font-size: 16px;
+                    padding: 15px 20px;
+                    font-size: 14px;
                     cursor: pointer;
-                    border: none;
-                    border-radius: 5px;
-                    background: #007bff;
-                    color: white;
-                    transition: background 0.3s;
+                    border: 2px solid #007bff;
+                    border-radius: 8px;
+                    background: ${selectedTheme === theme ? "#007bff" : "white"};
+                    color: ${selectedTheme === theme ? "white" : "#007bff"};
+                    transition: all 0.3s;
+                    min-width: 100px;
+                    font-weight: bold;
                 `;
 
-                btn.onmouseover = () => (btn.style.background = "#0056b3");
-                btn.onmouseout = () => (btn.style.background = "#007bff");
+                btn.onmouseover = () => {
+                    btn.style.background = "#007bff";
+                    btn.style.color = "white";
+                };
+
+                btn.onmouseout = () => {
+                    btn.style.background = selectedTheme === theme ? "#007bff" : "white";
+                    btn.style.color = selectedTheme === theme ? "white" : "#007bff";
+                };
 
                 btn.onclick = () => {
                     localStorage.setItem(STORAGE_KEY, theme);
                     selectedTheme = theme;
                     overlay.remove();
-                    console.log("[Sim Skin Loader] Theme selected:", theme);
+                    console.log("[Sim Skin Loader] Theme changed to:", theme);
+                    replaceBuildings();
                     resolve(theme);
                 };
 
@@ -92,8 +111,28 @@
             });
 
             modal.appendChild(buttonContainer);
+
+            const closeHint = document.createElement("p");
+            closeHint.textContent = "Press ESC to close";
+            closeHint.style.cssText = `
+                margin-top: 20px;
+                font-size: 12px;
+                color: #666;
+            `;
+            modal.appendChild(closeHint);
+
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
+
+            // Close on ESC key
+            const escHandler = (e) => {
+                if (e.key === "Escape") {
+                    overlay.remove();
+                    document.removeEventListener("keydown", escHandler);
+                    resolve(null);
+                }
+            };
+            document.addEventListener("keydown", escHandler);
         });
     }
 
@@ -514,23 +553,28 @@
 
     /*
     ============================================================
+    KEYBOARD SHORTCUT FOR THEME MENU
+    ============================================================
+    */
+
+    document.addEventListener("keydown", (e) => {
+        if ((e.key === "m" || e.key === "M") && !e.ctrlKey && !e.altKey) {
+            console.log("[Sim Skin Loader] Theme menu opened (M key)");
+            showThemeSelector();
+        }
+    });
+
+    /*
+    ============================================================
     INITIAL RUN
     ============================================================
     */
 
     window.addEventListener('load', () => {
 
-        console.log("[Sim Skin Loader] Loaded");
+        console.log("[Sim Skin Loader] Loaded - Default theme:", selectedTheme);
 
-        async function initialize() {
-            // Show theme selector if no theme is stored
-            if (!selectedTheme) {
-                await showThemeSelector();
-            }
-            replaceBuildings();
-        }
-
-        initialize();
+        replaceBuildings();
     });
 
 })();
