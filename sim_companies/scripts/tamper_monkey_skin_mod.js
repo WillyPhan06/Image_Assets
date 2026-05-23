@@ -298,7 +298,7 @@
 
         "electronics_factory_tier04": {
             image:
-            "electronic_factory_level_15.png",
+            "electronic_factory_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -306,7 +306,7 @@
 
         "electronics_factory_tier05": {
             image:
-            "electronic_factory_level_15.png",
+            "electronic_factory_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -314,7 +314,7 @@
 
         "electronics_factory_tier06": {
             image:
-            "electronic_factory_level_15.png",
+            "electronic_factory_level_15_v2.png",
 
             land:
             DEFAULT_LAND_URL
