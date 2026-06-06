@@ -31,7 +31,7 @@
     function initializeTheme() {
         // Check if user manually selected a theme (from menu click)
         const stored = localStorage.getItem(STORAGE_KEY);
-        
+
         if (stored) {
             selectedTheme = stored;
             localStorage.removeItem(STORAGE_KEY); // Clear after using
@@ -603,9 +603,9 @@
     */
 
     document.addEventListener("keydown", (e) => {
-        if ((e.key === "m" || e.key === "M") && !e.ctrlKey && !e.altKey) {
+        if ((e.key === "m" || e.key === "M") && e.ctrlKey && !e.altKey) {
             if (!menuOpen) {
-                console.log("[Sim Skin Loader] Theme menu opened (M key)");
+                console.log("[Sim Skin Loader] Theme menu opened (Ctrl+M)");
                 showThemeSelector();
             }
         }
