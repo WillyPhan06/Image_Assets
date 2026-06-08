@@ -402,7 +402,7 @@
 
         "forrest_02": {
             image:
-            "forest.png",
+            "forest_v2.png",
 
             land:
             DEFAULT_LAND_URL
@@ -410,7 +410,7 @@
 
         "residential_02": {
             image:
-            "forest.png",
+            "forest_v2.png",
 
             land:
             DEFAULT_LAND_URL
